@@ -99,10 +99,14 @@ void printStudentTable(const vector<Student>& students) {
 
     for (const auto& student : students) {
         string fullName = student.fam + " " + student.im + " " + student.otch;
-        cout << "| " << setw(6) << student.group << " | "
-            << setw(nameWidth) << left << fullName << "   | "
-            << setw(12) << right << fixed << setprecision(1) << student.average << " | "
-            << setw(15) << student.kol2 << " |" << endl;
+        cout << "| " << setw(6) << right << student.group << " | "
+            << setw(nameWidth) << left << fullName << "   | ";
+
+        for (int j = 0; j < 5; j++) {
+            cout << student.notes[j] << (j < 4 ? "," : "    ");
+        }
+
+        cout << "| " << setw(15) << student.kol2 << " |" << endl;
     }
 
     cout << "|________|__________________________________|______________|_________________|" << endl;
@@ -120,6 +124,25 @@ void printGroupStatsTable(const vector<GroupStats>& groupStats) {
     }
 
     cout << "|________|__________________|_______________|" << endl;
+}
+
+void printHighAverageTable(const vector<Student>& students) {
+    int nameWidth = 30; // Ширина для ФИО
+
+    cout << "___________________________________________________________" << endl;
+    cout << "| Группа |               ФИО                | Средний балл |" << endl;
+    cout << "|________|__________________________________|______________|" << endl;
+
+    for (const auto& student : students) {
+        if (student.average > 4) {
+            string fullName = student.fam + " " + student.im + " " + student.otch;
+            cout << "| " << setw(6) << right << student.group << " | "
+                << setw(nameWidth) << left << fullName << "   | "
+                << setw(12) << student.average << " |" << endl;
+        }
+    }
+
+    cout << "|________|__________________________________|______________|" << endl;
 }
 
 int main(int argc, char* argv[]) {
@@ -147,6 +170,9 @@ int main(int argc, char* argv[]) {
     if (isInteractive) {
         cout << "Таблица студентов:" << endl;
         printStudentTable(students);
+
+        cout << "\nСтуденты с средним баллом больше 4:" << endl;
+        printHighAverageTable(students);
 
         cout << "\nТаблица статистики групп:" << endl;
         printGroupStatsTable(groupStats);
