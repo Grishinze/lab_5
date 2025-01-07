@@ -93,23 +93,22 @@ void sortStudentsAndGroups(vector<Student>& students, vector<GroupStats>& groupS
 void printStudentTable(const vector<Student>& students) {
     int nameWidth = 30; // Ширина для ФИО
 
-    cout << "_____________________________________________________________________________" << endl;
-    cout << "| Группа |               ФИО                | Средний балл | Неудовл. оценки |" << endl;
-    cout << "|________|__________________________________|______________|_________________|" << endl;
+    cout << "____________________________________________________________" << endl;
+    cout << "| Группа |               ФИО                | Успеваемость | " << endl;
+    cout << "|________|__________________________________|______________|" << endl;
 
     for (const auto& student : students) {
         string fullName = student.fam + " " + student.im + " " + student.otch;
         cout << "| " << setw(6) << right << student.group << " | "
-            << setw(nameWidth) << left << fullName << "   | ";
+             << setw(nameWidth) << left << fullName << "   | ";
 
         for (int j = 0; j < 5; j++) {
             cout << student.notes[j] << (j < 4 ? "," : "    ");
         }
-
-        cout << "| " << setw(15) << student.kol2 << " |" << endl;
+        cout << "| " << endl;
     }
 
-    cout << "|________|__________________________________|______________|_________________|" << endl;
+    cout << "|________|__________________________________|______________|" << endl;
 }
 
 void printGroupStatsTable(const vector<GroupStats>& groupStats) {
@@ -149,25 +148,25 @@ int main(int argc, char* argv[]) {
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
 
-    bool isInteractive = true;
+    bool isHuman = false;
     if (argc > 1 && strcmp(argv[1], "false") == 0)
-        isInteractive = false;
+        isHuman = false;
 
     int N;
-    if (isInteractive) {
+    if (isHuman) {
         cout << "Введите количество студентов:" << endl;
     }
     cin >> N;
 
     vector<Student> students;
-    inputStudents(isInteractive, N, students);
+    inputStudents(isHuman, N, students);
 
     vector<GroupStats> groupStats;
     fillGroupStats(students, groupStats);
 
     sortStudentsAndGroups(students, groupStats);
 
-    if (isInteractive) {
+    if (isHuman) {
         cout << "Таблица студентов:" << endl;
         printStudentTable(students);
 
@@ -178,11 +177,15 @@ int main(int argc, char* argv[]) {
         printGroupStatsTable(groupStats);
     }
     else {
+        printStudentTable(students);
+
+        printHighAverageTable(students);
+
+        printGroupStatsTable(groupStats);
+
         for (const auto& student : students) {
             cout << student.group << " - " << student.fam << " " << student.im << " " << student.otch
                 << " (Средний балл: " << student.average << ")\n";
         }
     }
-
-    return 0;
 }
